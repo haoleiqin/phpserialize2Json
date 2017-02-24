@@ -73,14 +73,3 @@ func modifyValue(val interface{}) string {
 	return ""
 
 }
-func traverseMap(key interface{}, val interface{}) {
-	switch val.(type) {
-	default:
-		fmt.Printf("%v => %v \n", key, val)
-	case map[interface{}]interface{}:
-		map1 := val.(map[interface{}]interface{})
-		for k, v := range map1 {
-			traverseMap(k, v)
-		}
-	}
-}
