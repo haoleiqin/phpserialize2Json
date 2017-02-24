@@ -50,28 +50,18 @@ func main() {
 
 }
 
-type leaf struct {
-	stringMap   map[string]interface{}
-	stringValue string
-	isValue     bool
-}
-
-func modifyMap(val interface{}) leaf {
+func modifyMap(val interface{}) interface{} {
 	stringMap := make(map[string]interface{})
 	if map1, ok := val.(map[interface{}]interface{}); ok {
 		for k, v := range map1 {
 			stringKey := modifyValue(k)
 			leaf1 := modifyMap(v)
-			if leaf1.isValue {
-				stringMap[stringKey] = leaf1.stringValue
-			} else {
-				stringMap[stringKey] = leaf1.stringMap
-			}
+			stringMap[stringKey] = leaf1
 		}
 	} else {
-		return leaf{nil, modifyValue(val), true}
+		return modifyValue(val)
 	}
-	return leaf{stringMap, "", false}
+	return stringMap
 }
 func modifyValue(val interface{}) string {
 	if s, ok := val.(string); ok {
