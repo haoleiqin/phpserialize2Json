@@ -8,6 +8,7 @@ import (
 	// "reflect"
 	"strconv"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/korjavin/go-php-serialize"
 	"golang.org/x/text/encoding/unicode"
 
@@ -40,8 +41,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		log.Printf("%+v \n", stringMap)
-		log.Println(jsonString)
+		spew.Dump(stringMap, jsonString)
 
 	}
 
@@ -57,7 +57,6 @@ func modifyMap(val interface{}) leaf {
 	stringMap := make(map[string]interface{})
 	if map1, ok := val.(map[interface{}]interface{}); ok {
 		for k, v := range map1 {
-			// log.Printf("%v %v", k, reflect.TypeOf(k))
 			stringKey := modifyValue(k)
 			leaf1 := modifyMap(v)
 			if leaf1.isValue {
@@ -68,7 +67,6 @@ func modifyMap(val interface{}) leaf {
 		}
 	} else {
 		return leaf{nil, modifyValue(val), true}
-		// log.Printf("%v %v", val, reflect.TypeOf(val))
 	}
 	return leaf{stringMap, "", false}
 }
