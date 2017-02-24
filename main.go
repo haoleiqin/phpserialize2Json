@@ -27,7 +27,10 @@ func init() {
 	}
 }
 func main() {
-	rows, _ := db.Query("select id, films_ser from kp_people_films limit 1")
+	rows, err := db.Query("select id,films_ser FROM kp_people_films LIMIT 1")
+	if err != nil {
+		log.Fatal(err)
+	}
 	var id int
 	var ser string
 	for rows.Next() {
