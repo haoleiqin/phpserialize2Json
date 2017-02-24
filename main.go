@@ -1,53 +1,25 @@
-package main
+package json
 
 import (
-	"database/sql"
 	"encoding/json"
-	"fmt"
-	"log"
-	// "reflect"
 	"strconv"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/korjavin/go-php-serialize"
 	"golang.org/x/text/encoding/unicode"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
-var db *sql.DB
-
-const dburl = "root:@unix(/run/mysqld/mysqld.sock)/kino"
-
-func init() {
-	var err error
-	db, err = sql.Open("mysql", dburl)
+func DecodeToJSON(val1 string) (string, error) {
+	empty := ""
+	val, err := phpserialize.DecodeWithEncoding(val1, unicode.UTF8)
 	if err != nil {
-		log.Fatalf("mysql: %s", err)
+		return empty, err
 	}
-}
-func main() {
-	rows, err := db.Query("select id,films_ser FROM kp_people_films LIMIT 1")
+	stringMap := modifyMap(val)
+	jsonString, err := json.Marshal(stringMap)
 	if err != nil {
-		log.Fatal(err)
+		return empty, err
 	}
-	var id int
-	var ser string
-	for rows.Next() {
-		if err := rows.Scan(&id, &ser); err != nil {
-			log.Fatal(err)
-		}
-		val, _ := phpserialize.DecodeWithEncoding(ser, unicode.UTF8)
-		stringMap := modifyMap(val)
-		jsonString, err := json.Marshal(stringMap)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		spew.Dump(stringMap, jsonString)
-
-	}
-
+	return string(jsonString), nil
 }
 
 func modifyMap(val interface{}) interface{} {
@@ -71,5 +43,4 @@ func modifyValue(val interface{}) string {
 		return strconv.FormatInt(i, 10)
 	}
 	return ""
-
 }
