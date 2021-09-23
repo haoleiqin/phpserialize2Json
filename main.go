@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strconv"
 
-	"github.com/korjavin/go-php-serialize"
+	"github.com/haoleiqin/go-php-serialize"
 	"golang.org/x/text/encoding/unicode"
 )
 
